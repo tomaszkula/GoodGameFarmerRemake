@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Plowing Field
-  m_EditorClassIdentifier: Assembly-CSharp::ItemBlueprint
-  itemPrefab: {fileID: -927199367670048503, guid: 9d4c454de50308740a8e6a57a76a316e,
+  m_Script: {fileID: 11500000, guid: 16305d5e538e9a740a6df5c1dfbca01f, type: 3}
+  m_Name: Plowed Field
+  m_EditorClassIdentifier: 
+  gridItemPrefab: {fileID: 5125510440845607338, guid: 0b887ecdd3ddcdc49a73640ecd9817d7,
     type: 3}
   size: {x: 4, y: 4}
   cost: 10
