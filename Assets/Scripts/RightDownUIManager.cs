@@ -2,6 +2,7 @@
 
 public class RightDownUIManager : MonoBehaviour
 {
+    [SerializeField] GameObject shop;
     [SerializeField] GridItemBlueprint plowedField;
 
     BuildManager buildManager;
@@ -32,5 +33,10 @@ public class RightDownUIManager : MonoBehaviour
     {
         cursorManager.Mode = CursorMode.DIG_MODE;
         itemFollowingMouseManager.SetItemFollowingMouse(null);
+    }
+
+    public void OpenShop()
+    {
+        shop.SetActive(true);
     }
 }
