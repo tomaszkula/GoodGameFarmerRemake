@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridSystem : MonoBehaviour
 {
     GameObject[,] grid;
-    int gridSize = 40;
+    int gridSize = 32;
 
     private void Start()
     {
@@ -25,7 +25,7 @@ public class GridSystem : MonoBehaviour
     {
         Vector3 newPos = new Vector3();
         newPos.x = pos.x + (size.x - 1) / 2;
-        newPos.y = pos.y + (GetComponent<Renderer>().bounds.size.y) / 2;
+        newPos.y = /*pos.y +*/ (GetComponent<Renderer>().bounds.size.y);
         newPos.z = pos.z - (size.y - 1) / 2;
         return newPos;
     }

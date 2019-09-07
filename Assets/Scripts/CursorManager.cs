@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum CursorMode
 {
-    NORMAL, GRID_MODE
+    NORMAL_MODE, GRID_MODE, DIG_MODE
 }
 
 public class CursorManager : MonoBehaviour
@@ -13,7 +13,7 @@ public class CursorManager : MonoBehaviour
 
     void Start()
     {
-        mode = CursorMode.NORMAL;
+        mode = CursorMode.NORMAL_MODE;
     }
 
     public CursorMode Mode
@@ -27,10 +27,5 @@ public class CursorManager : MonoBehaviour
         {
             mode = value;
         }
-    }
-
-    void Update()
-    {
-        
     }
 }

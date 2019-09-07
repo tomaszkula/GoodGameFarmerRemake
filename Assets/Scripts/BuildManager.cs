@@ -5,7 +5,7 @@ public class BuildManager : MonoBehaviour
     GridSystem gridSystem;
     CursorManager cursorManager;
 
-    GridItemBlueprint gridItemBlueprint;
+    GridItemBlueprint buildItemBlueprint;
 
     void Start()
     {
@@ -15,35 +15,40 @@ public class BuildManager : MonoBehaviour
 
     void Update()
     {
-        if (cursorManager.Mode != CursorMode.GRID_MODE || !gridItemBlueprint) return;
+        if (cursorManager.Mode != CursorMode.GRID_MODE && cursorManager.Mode != CursorMode.DIG_MODE) return;
 
-        BuildItemOn();
-    }
-
-    void BuildItemOn()
-    {
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if(Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit))
             {
-                Vector3 toGrid = gridSystem.SnapToGrid(hit.point);
-                Vector2 size = gridItemBlueprint.GetSize();
-                if (!CanBuild(toGrid, size)) return;
+                GameObject colliderGameObject = hit.collider.gameObject;
 
-                Vector3 newPos = gridSystem.SnapToPosition(toGrid, size);
-                GameObject item = (GameObject)Instantiate(gridItemBlueprint.GetGridItemPrefab(), newPos, Quaternion.identity);
-
-                for(int x = (int)(toGrid.x); x < toGrid.x + (int)(size.x); x++)
-                {
-                    for (int z = (int)(toGrid.z); z > toGrid.z - (int)(size.y); z--)
-                    {
-                        gridSystem.FillGrid(x, z, item);
-                    }
-                }
+                BuildItemOn(colliderGameObject, hit.point);
+                DestroyItem(colliderGameObject);
             }
         }
+    }
+
+    void BuildItemOn(GameObject go, Vector3 pos)
+    {
+        if (cursorManager.Mode != CursorMode.GRID_MODE || !go.CompareTag("Farm Terrain")) return;
+
+        Vector3 toGrid = gridSystem.SnapToGrid(pos);
+        Vector2 size = buildItemBlueprint.GetSize();
+        if (!CanBuild(toGrid, size)) return;
+
+        Vector3 newPos = gridSystem.SnapToPosition(toGrid, size);
+        GameObject item = (GameObject)Instantiate(buildItemBlueprint.GetGridItemPrefab(), newPos, Quaternion.identity);
+        FillGrid(toGrid, size, item);
+    }
+
+    void DestroyItem(GameObject go)
+    {
+        if (cursorManager.Mode != CursorMode.DIG_MODE || !go.CompareTag("Grid Item")) return;
+
+        Destroy(go);
     }
 
     bool CanBuild(Vector3 pos, Vector2 size)
@@ -58,8 +63,24 @@ public class BuildManager : MonoBehaviour
         return true;
     }
 
-    public void SetGridItemBlueprint(GridItemBlueprint item)
+    void FillGrid(Vector3 pos, Vector2 size, GameObject go)
     {
-        gridItemBlueprint = item;
+        for (int x = (int)(pos.x); x < pos.x + (int)(size.x); x++)
+        {
+            for (int z = (int)(pos.z); z > pos.z - (int)(size.y); z--)
+            {
+                gridSystem.FillGrid(x, z, go);
+            }
+        }
+    }
+
+    public GridItemBlueprint GetBuildItemBlueprint()
+    {
+        return buildItemBlueprint;
+    }
+
+    public void SetBuildItemBlueprint(GridItemBlueprint item)
+    {
+        buildItemBlueprint = item;
     }
 }
