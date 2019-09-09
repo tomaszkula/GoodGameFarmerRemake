@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Strawberries
   m_EditorClassIdentifier: 
   itemName: Truskawki
+  itemIcon: {fileID: 21300000, guid: 4c63c8effb8d24f46b061ea262343922, type: 3}
   levelToUnlock: 0
   itemExp: 3
+  itemTime: {x: 0, y: 1, z: 0}
   itemPrize: 36
   itemAdditionalPrize: 0
-  itemCost: 20
+  itemCoinCost: 0
+  itemDollarCost: 20

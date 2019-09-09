@@ -1,37 +1,131 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ItemHolder : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI itemName;
-    [SerializeField] TextMeshProUGUI itemExp;
-    [SerializeField] TextMeshProUGUI itemTime;
-    [SerializeField] TextMeshProUGUI itemPrize;
-    [SerializeField] TextMeshProUGUI itemAdditionalPrize;
-    [SerializeField] TextMeshProUGUI itemCost;
+    [Header("Main Info")]
+    [SerializeField] TextMeshProUGUI itemNameText;
+    [SerializeField] Image itemIconImage;
 
-    public void SetItemName(string name)
+    [Header("Item Info")]
+    [SerializeField] GameObject expInfo;
+    [SerializeField] TextMeshProUGUI expInfoText;
+    [SerializeField] GameObject timeInfo;
+    [SerializeField] TextMeshProUGUI timeInfoText;
+    [SerializeField] GameObject prizeInfo;
+    [SerializeField] TextMeshProUGUI prizeInfoText;
+    [SerializeField] GameObject additionalPrizeInfo;
+    [SerializeField] TextMeshProUGUI additionalPrizeInfoText;
+
+    [Header("Item Cost")]
+    [SerializeField] GameObject coinCost;
+    [SerializeField] TextMeshProUGUI coinCostText;
+    [SerializeField] GameObject dollarCost;
+    [SerializeField] TextMeshProUGUI dollarCostText;
+
+    public void SetItemMainInfo(string name, Sprite icon)
     {
-        itemName.text = name;
+        itemNameText.text = name;
+        itemIconImage.sprite = icon;
     }
 
-    public void SetItemExp(int exp)
+    public void SetItemInfo(int exp, Vector3Int time, int prize, int additionalPrize)
     {
-        itemExp.text = exp.ToString();
+        SetExpInfo(exp);
+        SetTimeInfo(time);
+        SetPrizeInfo(prize);
+        SetAdditionalPrizeInfo(additionalPrize);
     }
 
-    public void SetItemPrize(int prize)
+    public void SetItemCost(int coins, int dollars)
     {
-        itemPrize.text = prize.ToString();
+        SetCoinCost(coins);
+        SetDollarCost(dollars);
     }
 
-    public void SetItemAdditionalPrize(int additionalPrize)
+    void SetExpInfo(int exp)
     {
-        itemAdditionalPrize.text = additionalPrize.ToString();
+        if(exp < 1)
+        {
+            Destroy(expInfo);
+            return;
+        }
+        else
+        {
+            expInfoText.text = exp.ToString();
+        }
     }
 
-    public void SetItemCost(int cost)
+    void SetTimeInfo(Vector3Int time)
     {
-        itemCost.text = cost.ToString();
+        if (time.x < 1 && time.y < 1 && time.z < 1)
+        {
+            Destroy(timeInfo);
+            return;
+        }
+        else
+        {
+            string timeInfoMessage = "";
+
+            if (time.x > 0) timeInfoMessage += time.x.ToString() + "d ";
+            if (time.y > 0) timeInfoMessage += time.y.ToString() + "h ";
+            if (time.z > 0) timeInfoMessage += time.z.ToString() + "min ";
+            timeInfoMessage.TrimEnd(' ');
+
+            timeInfoText.text = timeInfoMessage;
+        }
+    }
+
+    void SetPrizeInfo(int prize)
+    {
+        if (prize < 1)
+        {
+            Destroy(prizeInfo);
+            return;
+        }
+        else
+        {
+            prizeInfoText.text = prize.ToString();
+        }
+    }
+
+    void SetAdditionalPrizeInfo(int additionalPrize)
+    {
+        if (additionalPrize < 1)
+        {
+            Destroy(additionalPrizeInfo);
+            return;
+        }
+        else
+        {
+            additionalPrizeInfoText.text = additionalPrize.ToString();
+        }
+    }
+
+    void SetCoinCost(int coins)
+    {
+        if (coins < 1)
+        {
+            Destroy(coinCost);
+            return;
+        }
+        else
+        {
+            coinCostText.text = coins.ToString();
+        }
+    }
+
+    void SetDollarCost(int dollars)
+    {
+        if (dollars < 1)
+        {
+            Destroy(dollarCost);
+            return;
+        }
+        else
+        {
+            dollarCostText.text = dollars.ToString();
+        }
     }
 }
