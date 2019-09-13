@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class ItemHolder : MonoBehaviour
+public class ShopItemHolder : MonoBehaviour
 {
     [Header("Main Info")]
     [SerializeField] TextMeshProUGUI itemNameText;
@@ -23,6 +23,9 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] TextMeshProUGUI coinCostText;
     [SerializeField] GameObject dollarCost;
     [SerializeField] TextMeshProUGUI dollarCostText;
+
+    [Header("Buy Button")]
+    [SerializeField] Button buyButton;
 
     public void SetItemMainInfo(string name, Sprite icon)
     {
@@ -46,7 +49,7 @@ public class ItemHolder : MonoBehaviour
 
     void SetExpInfo(int exp)
     {
-        if(exp < 1)
+        if (exp < 1)
         {
             Destroy(expInfo);
             return;
@@ -127,5 +130,10 @@ public class ItemHolder : MonoBehaviour
         {
             dollarCostText.text = dollars.ToString();
         }
+    }
+
+    public void SetBuyButtonEvent()
+    {
+
     }
 }

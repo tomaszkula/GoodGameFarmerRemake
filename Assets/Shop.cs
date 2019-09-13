@@ -3,69 +3,64 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    [SerializeField] GameObject itemHolderPrefab;
-
-    [Header("Item Lists")]
-    [SerializeField] Transform itemsGridsParent;
-    [SerializeField] GameObject itemsGrid;
-    [SerializeField] List<ShopItemsList> itemsLists = new List<ShopItemsList>();
-
-    [Header("Item Lists View Sliders")]
+    [Header("Prefabs")]
+    [SerializeField] Transform shopTabsParent;
+    [SerializeField] GameObject shopTabHolderPrefab;
+    [SerializeField] Transform shopItemsGridParent;
+    [SerializeField] GameObject shopItemsGridPrefab;
+    [SerializeField] GameObject shopItemHolderPrefab;
     [SerializeField] GameObject leftSlider;
     [SerializeField] GameObject rightSlider;
 
-    List<GameObject> grids = new List<GameObject>();
-    List<int> pagesCount = new List<int>();
-    int currentItemsListId, currentPage;
-    
+    [Header("ShopTabs")]
+    [SerializeField] List<ShopTab> shopTabs;
+
+    ShopTab currentTab = null;
+    int currentPage = 1;
 
     void Start()
     {
         FillShop();
-        OpenTab();
+        OpenTab(shopTabs[0]);
     }
 
     void FillShop()
     {
-        for(int i = 0; i < itemsLists.Count; i++)
+        foreach(ShopTab shopTab in shopTabs)
         {
-            ShopItemsList items = itemsLists[i];
+            GameObject shopTabHolder = Instantiate(shopTabHolderPrefab, shopTabsParent);
+            ShopTabHolder shopTabHolderScript = shopTabHolder.GetComponent<ShopTabHolder>();
+            shopTabHolderScript.SetTabIcon(shopTab.GetShopTabIcon());
 
-            grids.Add(Instantiate(itemsGrid, itemsGridsParent));
-            grids[i].SetActive(false);
+            GameObject shopItemsGrid = Instantiate(shopItemsGridPrefab, shopItemsGridParent);
+            shopTab.ShopItemsGrid = shopItemsGrid;
+            shopItemsGrid.SetActive(false);
 
-            foreach (ShopItem item in items)
+            List<ShopItem> shopItems = shopTab.getShopItems();
+            foreach(ShopItem shopItem in shopItems)
             {
-                GameObject itemHolder = (GameObject)Instantiate(itemHolderPrefab, grids[i].transform);
-                ItemHolder holderScript = itemHolder.GetComponent<ItemHolder>();
-                holderScript.SetItemMainInfo(item.GetItemName(), item.GetItemIcon());
-                holderScript.SetItemInfo(item.GetItemExp(), item.GetItemTime(), item.GetItemPrize(), item.GetItemAdditionalPrize());
-                holderScript.SetItemCost(item.GetItemCoinCost(), item.GetItemDollarCost());
+                GameObject shopItemHolder = (GameObject)Instantiate(shopItemHolderPrefab, shopItemsGrid.transform);
+                ShopItemHolder shopItemHolderScript = shopItemHolder.GetComponent<ShopItemHolder>();
+                shopItemHolderScript.SetItemMainInfo(shopItem.GetItemName(), shopItem.GetItemIcon());
+                shopItemHolderScript.SetItemInfo(shopItem.GetItemExp(), shopItem.GetItemTime(), shopItem.GetItemPrize(), shopItem.GetItemAdditionalPrize());
+                shopItemHolderScript.SetItemCost(shopItem.GetItemCoinCost(), shopItem.GetItemDollarCost());
+
+                shopItemHolderScript.SetBuyButtonEvent();
             }
 
-            int pages = Mathf.CeilToInt(items.Count / 8.0f);
-            pagesCount.Add(pages);
+            shopTabHolderScript.SetButtonEvent(OpenTab, shopTab, 1);
         }
     }
 
-    void OpenTab(int idList = 0, int idPage = 1)
+    void OpenTab(ShopTab tab = null, int idPage = 1)
     {
-        Debug.Log(currentItemsListId);
-        currentItemsListId = idList;
+        if (currentTab == tab) return;
+
+        if (currentTab != null) currentTab.ShopItemsGrid.SetActive(false);
+        if (tab != null) tab.ShopItemsGrid.SetActive(true);
+        currentTab = tab;
         currentPage = idPage;
 
-        grids[currentItemsListId].SetActive(true);
-
-        CheckSliders();
-    }
-
-    public void SlideGridView(int side)
-    {
-        Vector3 newPos = grids[currentItemsListId].transform.localPosition;
-        newPos.y += side * 735f;
-        grids[currentItemsListId].transform.localPosition = newPos;
-
-        currentPage += side;
         CheckSliders();
     }
 
@@ -74,8 +69,25 @@ public class Shop : MonoBehaviour
         if (currentPage > 1) leftSlider.SetActive(true);
         else leftSlider.SetActive(false);
 
-        if (currentPage < pagesCount[currentItemsListId]) rightSlider.SetActive(true);
+        if (currentPage < currentTab.GetPagesCount()) rightSlider.SetActive(true);
         else rightSlider.SetActive(false);
+    }
+
+    void BuyShopItem()
+    {
+
+    }
+
+    public void SlideGridView(int side)
+    {
+        GameObject shopItemsGrid = currentTab.ShopItemsGrid;
+
+        Vector3 newPos = shopItemsGrid.transform.localPosition;
+        newPos.y += side * 735f;
+        shopItemsGrid.transform.localPosition = newPos;
+
+        currentPage += side;
+        CheckSliders();
     }
 
     public void ExitShop()
