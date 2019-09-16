@@ -7,7 +7,7 @@ public class GridSystem : MonoBehaviour
     GameObject[,] grid;
     int gridSize = 32;
 
-    private void Start()
+    void Start()
     {
         grid = new GameObject[gridSize, gridSize];
     }

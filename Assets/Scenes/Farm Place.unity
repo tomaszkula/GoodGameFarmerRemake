@@ -1173,7 +1173,7 @@ MonoBehaviour:
   shopTabs:
   - tabIcon: {fileID: 21300000, guid: 2f53cf1f975a0e941bd8b3208b06d6ca, type: 3}
     shopItems:
-    - {fileID: 11400000, guid: d348c43caee61684da60aa4e2c647330, type: 2}
+    - {fileID: 11400000, guid: 524efee035fd2d240b74f97f6d5d9f27, type: 2}
     - {fileID: 11400000, guid: d348c43caee61684da60aa4e2c647330, type: 2}
     - {fileID: 11400000, guid: d348c43caee61684da60aa4e2c647330, type: 2}
     - {fileID: 11400000, guid: d348c43caee61684da60aa4e2c647330, type: 2}
@@ -1279,7 +1279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shop: {fileID: 638402505}
-  plowedField: {fileID: 11400000, guid: 76c0c094ed900e448906a92b4e1013d6, type: 2}
+  plowedField: {fileID: 11400000, guid: 97f488c0aea481c469a07d2c55636747, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,7 +1454,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 701102933}
-        m_MethodName: GridMode_PlowedField
+        m_MethodName: SetUpPlowedMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1494,7 +1494,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 799879979}
-  - component: {fileID: 799879978}
   - component: {fileID: 799879977}
   - component: {fileID: 799879980}
   m_Layer: 0
@@ -1514,18 +1513,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91f11c1730ed28541b52e54b53f78b6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &799879978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 799879976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0417440c58bf13248a57e350c4d8ff39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &799879979
@@ -2557,6 +2544,7 @@ GameObject:
   - component: {fileID: 1572577632}
   - component: {fileID: 1572577631}
   - component: {fileID: 1572577630}
+  - component: {fileID: 1572577635}
   m_Layer: 0
   m_Name: Farm Terrain
   m_TagString: Farm Terrain
@@ -2649,6 +2637,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1572577635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572577629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffeba836dbcff8249b234f9955067e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1869499436
 GameObject:
   m_ObjectHideFlags: 0

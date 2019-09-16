@@ -1,86 +1,43 @@
 ﻿using UnityEngine;
 
+public enum BuildMode
+{
+    NORMAL_MODE, DIG_MODE, SET_UP_PLOWED_MODE, PLOW_MODE, PLANT_MODE
+}
+
 public class BuildManager : MonoBehaviour
 {
-    GridSystem gridSystem;
-    CursorManager cursorManager;
-
-    GridItemBlueprint buildItemBlueprint;
+    BuildMode buildMode;
+    ShopItem item;
 
     void Start()
     {
-        gridSystem = FindObjectOfType<GridSystem>();
-        cursorManager = FindObjectOfType<CursorManager>();
+        buildMode = BuildMode.NORMAL_MODE;
     }
 
-    void Update()
+    public BuildMode BuildMode
     {
-        if (cursorManager.Mode != CursorMode.GRID_MODE && cursorManager.Mode != CursorMode.DIG_MODE) return;
-
-        if (Input.GetMouseButtonDown(0))
+        get
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                GameObject colliderGameObject = hit.collider.gameObject;
+            return buildMode;
+        }
 
-                BuildItemOn(colliderGameObject, hit.point);
-                DestroyItem(colliderGameObject);
-            }
+        set
+        {
+            buildMode = value;
         }
     }
 
-    void BuildItemOn(GameObject go, Vector3 pos)
+    public ShopItem Item
     {
-        if (cursorManager.Mode != CursorMode.GRID_MODE || !go.CompareTag("Farm Terrain")) return;
-
-        Vector3 toGrid = gridSystem.SnapToGrid(pos);
-        Vector2 size = buildItemBlueprint.GetSize();
-        if (!CanBuild(toGrid, size)) return;
-
-        Vector3 newPos = gridSystem.SnapToPosition(toGrid, size);
-        GameObject item = (GameObject)Instantiate(buildItemBlueprint.GetGridItemPrefab(), newPos, Quaternion.identity);
-        FillGrid(toGrid, size, item);
-    }
-
-    void DestroyItem(GameObject go)
-    {
-        if (cursorManager.Mode != CursorMode.DIG_MODE || !go.CompareTag("Grid Item")) return;
-
-        Destroy(go);
-    }
-
-    bool CanBuild(Vector3 pos, Vector2 size)
-    {
-        for (int x = (int)(pos.x); x < pos.x + (int)(size.x); x++)
+        get
         {
-            for (int z = (int)(pos.z); z > pos.z - (int)(size.y); z--)
-            {
-                if (!gridSystem.IsNodeFree(x, z)) return false;
-            }
+            return item;
         }
-        return true;
-    }
 
-    void FillGrid(Vector3 pos, Vector2 size, GameObject go)
-    {
-        for (int x = (int)(pos.x); x < pos.x + (int)(size.x); x++)
+        set
         {
-            for (int z = (int)(pos.z); z > pos.z - (int)(size.y); z--)
-            {
-                gridSystem.FillGrid(x, z, go);
-            }
+            item = value;
         }
-    }
-
-    public GridItemBlueprint GetBuildItemBlueprint()
-    {
-        return buildItemBlueprint;
-    }
-
-    public void SetBuildItemBlueprint(GridItemBlueprint item)
-    {
-        buildItemBlueprint = item;
     }
 }

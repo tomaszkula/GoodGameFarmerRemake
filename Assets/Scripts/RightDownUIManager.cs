@@ -3,35 +3,33 @@
 public class RightDownUIManager : MonoBehaviour
 {
     [SerializeField] GameObject shop;
-    [SerializeField] GridItemBlueprint plowedField;
+    [SerializeField] ShopItem plowedField;
 
     BuildManager buildManager;
-    CursorManager cursorManager;
     ItemFollowingMouseManager itemFollowingMouseManager;
 
     void Start()
     {
         buildManager = FindObjectOfType<BuildManager>();
-        cursorManager = FindObjectOfType<CursorManager>();
         itemFollowingMouseManager = FindObjectOfType<ItemFollowingMouseManager>();
     }
 
     public void NormalMode()
     {
-        cursorManager.Mode = CursorMode.NORMAL_MODE;
+        buildManager.BuildMode = BuildMode.NORMAL_MODE;
         itemFollowingMouseManager.SetItemFollowingMouse(null);
     }
 
-    public void GridMode_PlowedField()
+    public void SetUpPlowedMode()
     {
-        cursorManager.Mode = CursorMode.GRID_MODE;
-        buildManager.SetBuildItemBlueprint(plowedField);
-        itemFollowingMouseManager.SetItemFollowingMouse(plowedField.GetGridItemPrefab());
+        buildManager.Item = plowedField;
+        buildManager.BuildMode = BuildMode.SET_UP_PLOWED_MODE;
+        itemFollowingMouseManager.SetItemFollowingMouse(plowedField.GetItemPrefab());
     }
 
     public void DigMode()
     {
-        cursorManager.Mode = CursorMode.DIG_MODE;
+        buildManager.BuildMode = BuildMode.DIG_MODE;
         itemFollowingMouseManager.SetItemFollowingMouse(null);
     }
 

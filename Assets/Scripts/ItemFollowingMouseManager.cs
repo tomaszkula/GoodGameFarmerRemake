@@ -4,14 +4,13 @@ public class ItemFollowingMouseManager : MonoBehaviour
 {
     GridSystem gridSystem;
     BuildManager buildManager;
+
     GameObject itemFollowingMouse;
 
     void Start()
     {
         gridSystem = FindObjectOfType<GridSystem>();
         buildManager = FindObjectOfType<BuildManager>();
-
-        itemFollowingMouse = null;
     }
 
     void Update()
@@ -21,14 +20,14 @@ public class ItemFollowingMouseManager : MonoBehaviour
         FollowMouse();
     }
 
-    private void FollowMouse()
+    void FollowMouse()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
             Vector3 toGrid = gridSystem.SnapToGrid(hit.point);
-            Vector2 size = buildManager.GetBuildItemBlueprint().GetSize();
+            Vector2 size = buildManager.Item.GetSize();
 
             Vector3 newPos = gridSystem.SnapToPosition(toGrid, size);
             itemFollowingMouse.gameObject.transform.position = newPos;
@@ -41,6 +40,10 @@ public class ItemFollowingMouseManager : MonoBehaviour
         if (!item) return;
 
         itemFollowingMouse = (GameObject)Instantiate(item, transform.position, transform.rotation);
-        Destroy(itemFollowingMouse.GetComponent<Collider>());
+        foreach (var component in itemFollowingMouse.GetComponents<Component>())
+        {
+            if (component is Transform) continue;
+            Destroy(component);
+        }
     }
 }

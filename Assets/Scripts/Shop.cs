@@ -18,8 +18,14 @@ public class Shop : MonoBehaviour
     ShopTab currentTab = null;
     int currentPage = 1;
 
+    BuildManager buildManager;
+    ItemFollowingMouseManager itemFollowingMouseManager;
+
     void Start()
     {
+        buildManager = FindObjectOfType<BuildManager>();
+        itemFollowingMouseManager = FindObjectOfType<ItemFollowingMouseManager>();
+
         FillShop();
         OpenTab(shopTabs[0]);
     }
@@ -45,7 +51,7 @@ public class Shop : MonoBehaviour
                 shopItemHolderScript.SetItemInfo(shopItem.GetItemExp(), shopItem.GetItemTime(), shopItem.GetItemPrize(), shopItem.GetItemAdditionalPrize());
                 shopItemHolderScript.SetItemCost(shopItem.GetItemCoinCost(), shopItem.GetItemDollarCost());
 
-                shopItemHolderScript.SetBuyButtonEvent();
+                shopItemHolderScript.SetBuyButtonEvent(BuyShopItem, shopItem);
             }
 
             shopTabHolderScript.SetButtonEvent(OpenTab, shopTab, 1);
@@ -73,9 +79,12 @@ public class Shop : MonoBehaviour
         else rightSlider.SetActive(false);
     }
 
-    void BuyShopItem()
+    void BuyShopItem(ShopItem item)
     {
-
+        buildManager.Item = item;
+        buildManager.BuildMode = BuildMode.PLANT_MODE;
+        itemFollowingMouseManager.SetItemFollowingMouse(null);
+        ExitShop();
     }
 
     public void SlideGridView(int side)

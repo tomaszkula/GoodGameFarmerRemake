@@ -27,6 +27,8 @@ public class ShopItemHolder : MonoBehaviour
     [Header("Buy Button")]
     [SerializeField] Button buyButton;
 
+    public delegate void ButtonDelegate(ShopItem item);
+
     public void SetItemMainInfo(string name, Sprite icon)
     {
         itemNameText.text = name;
@@ -73,7 +75,7 @@ public class ShopItemHolder : MonoBehaviour
 
             if (time.x > 0) timeInfoMessage += time.x.ToString() + "d ";
             if (time.y > 0) timeInfoMessage += time.y.ToString() + "h ";
-            if (time.z > 0) timeInfoMessage += time.z.ToString() + "min ";
+            if (time.z > 0) timeInfoMessage += time.z.ToString() + "m ";
             timeInfoMessage.TrimEnd(' ');
 
             timeInfoText.text = timeInfoMessage;
@@ -132,8 +134,8 @@ public class ShopItemHolder : MonoBehaviour
         }
     }
 
-    public void SetBuyButtonEvent()
+    public void SetBuyButtonEvent(ButtonDelegate buttonDelegate, ShopItem item)
     {
-
+        buyButton.onClick.AddListener(() => buttonDelegate(item));
     }
 }
