@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
 public class ShopItemHolder : MonoBehaviour
 {
-    [Header("Main Info")]
+    [Header("Item Name")]
     [SerializeField] TextMeshProUGUI itemNameText;
-    [SerializeField] Image itemIconImage;
 
-    [Header("Item Info")]
+    [Header("Item Content")]
+    [SerializeField] Image itemIconImage;
+    [Space(20)]
+    [SerializeField] GameObject itemUnlockedInfo;
     [SerializeField] GameObject expInfo;
     [SerializeField] TextMeshProUGUI expInfoText;
     [SerializeField] GameObject timeInfo;
@@ -17,90 +20,50 @@ public class ShopItemHolder : MonoBehaviour
     [SerializeField] TextMeshProUGUI prizeInfoText;
     [SerializeField] GameObject additionalPrizeInfo;
     [SerializeField] TextMeshProUGUI additionalPrizeInfoText;
-
-    [Header("Item Cost")]
-    [SerializeField] GameObject coinCost;
-    [SerializeField] TextMeshProUGUI coinCostText;
     [SerializeField] GameObject dollarCost;
     [SerializeField] TextMeshProUGUI dollarCostText;
+    [SerializeField] GameObject coinCost;
+    [SerializeField] TextMeshProUGUI coinCostText;
+    [Space(20)]
+    [SerializeField] GameObject itemLockedInfo;
+    [SerializeField] TextMeshProUGUI levelToUnlockText;
 
     [Header("Buy Button")]
     [SerializeField] Button buyButton;
 
-    public delegate void ButtonDelegate(ShopItem item);
+    public delegate void ButtonDelegate(Item item);
 
-    public void SetItemMainInfo(string name, Sprite icon)
+    public void SetItemName(string name) { itemNameText.text = name; }
+
+    public void SetItemIcon(Sprite icon) { itemIconImage.sprite = icon; }
+
+    public void SetItemExp(int exp)
     {
-        itemNameText.text = name;
-        itemIconImage.sprite = icon;
+        expInfoText.text = exp.ToString();
     }
 
-    public void SetItemInfo(int exp, Vector3Int time, int prize, int additionalPrize)
+    public void SetItemTime(Vector3Int time)
     {
-        SetExpInfo(exp);
-        SetTimeInfo(time);
-        SetPrizeInfo(prize);
-        SetAdditionalPrizeInfo(additionalPrize);
+        string timeInfoMessage = "";
+
+        if (time.x > 0) timeInfoMessage += time.x.ToString() + "d ";
+        if (time.y > 0) timeInfoMessage += time.y.ToString() + "h ";
+        if (time.z > 0) timeInfoMessage += time.z.ToString() + "m ";
+        timeInfoMessage.TrimEnd(' ');
+
+        timeInfoText.text = timeInfoMessage;
     }
 
-    public void SetItemCost(int coins, int dollars)
+    public void SetItemPrize(int prize)
     {
-        SetCoinCost(coins);
-        SetDollarCost(dollars);
+        prizeInfoText.text = prize.ToString();
     }
 
-    void SetExpInfo(int exp)
-    {
-        if (exp < 1)
-        {
-            Destroy(expInfo);
-            return;
-        }
-        else
-        {
-            expInfoText.text = exp.ToString();
-        }
-    }
-
-    void SetTimeInfo(Vector3Int time)
-    {
-        if (time.x < 1 && time.y < 1 && time.z < 1)
-        {
-            Destroy(timeInfo);
-            return;
-        }
-        else
-        {
-            string timeInfoMessage = "";
-
-            if (time.x > 0) timeInfoMessage += time.x.ToString() + "d ";
-            if (time.y > 0) timeInfoMessage += time.y.ToString() + "h ";
-            if (time.z > 0) timeInfoMessage += time.z.ToString() + "m ";
-            timeInfoMessage.TrimEnd(' ');
-
-            timeInfoText.text = timeInfoMessage;
-        }
-    }
-
-    void SetPrizeInfo(int prize)
-    {
-        if (prize < 1)
-        {
-            Destroy(prizeInfo);
-            return;
-        }
-        else
-        {
-            prizeInfoText.text = prize.ToString();
-        }
-    }
-
-    void SetAdditionalPrizeInfo(int additionalPrize)
+    public void SetItemAdditionalPrize(int additionalPrize)
     {
         if (additionalPrize < 1)
         {
-            Destroy(additionalPrizeInfo);
-            return;
+            additionalPrizeInfo.SetActive(false);
         }
         else
         {
@@ -108,25 +71,17 @@ public class ShopItemHolder : MonoBehaviour
         }
     }
 
-    void SetCoinCost(int coins)
+    public void SetItemCost(int dollars, int coins)
     {
-        if (coins < 1)
-        {
-            Destroy(coinCost);
-            return;
-        }
-        else
-        {
-            coinCostText.text = coins.ToString();
-        }
+        SetDollarCost(dollars);
+        SetCoinCost(coins);
     }
 
     void SetDollarCost(int dollars)
     {
         if (dollars < 1)
         {
-            Destroy(dollarCost);
-            return;
+            dollarCost.SetActive(false);
         }
         else
         {
@@ -134,8 +89,36 @@ public class ShopItemHolder : MonoBehaviour
         }
     }
 
-    public void SetBuyButtonEvent(ButtonDelegate buttonDelegate, ShopItem item)
+    void SetCoinCost(int coins)
+    {
+        if (coins < 1)
+        {
+            coinCost.SetActive(false);
+        }
+        else
+        {
+            coinCostText.text = coins.ToString();
+        }
+    }
+
+    public void SetLevelToUnlock(int level)
+    {
+        levelToUnlockText.text = level.ToString();
+    }
+
+    public void SetBuyButtonEvent(ButtonDelegate buttonDelegate, Item item)
     {
         buyButton.onClick.AddListener(() => buttonDelegate(item));
+    }
+
+    public void SetLocked()
+    {
+        itemLockedInfo.SetActive(true);
+    }
+
+    public void SetUnlocked()
+    {
+        itemUnlockedInfo.SetActive(true);
+        buyButton.gameObject.SetActive(true);
     }
 }

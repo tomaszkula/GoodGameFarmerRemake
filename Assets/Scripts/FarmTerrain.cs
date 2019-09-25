@@ -20,7 +20,7 @@ public class FarmTerrain : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (buildManager.BuildMode == BuildMode.SET_UP_PLOWED_MODE) SetUpPlowed(hit.point);
+            if (buildManager.BuildMode == BuildMode.PutOnGrid_Mode) SetUpPlowed(hit.point);
         }
     }
 

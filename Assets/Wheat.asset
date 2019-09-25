@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75967d900b628204997049201885e3d5, type: 3}
-  m_Name: Pszenica
+  m_Script: {fileID: 11500000, guid: 5477ab2dad6b68d45abaf0e8767257cc, type: 3}
+  m_Name: Wheat
   m_EditorClassIdentifier: 
-  itemName: Pszenica
+  itemName: Wheat
   itemIcon: {fileID: 21300000, guid: 4c63c8effb8d24f46b061ea262343922, type: 3}
-  levelToUnlock: 0
-  itemExp: 1
-  itemTime: {x: 10, y: 10, z: 10}
-  itemPrize: 21
-  itemAdditionalPrize: 0
-  itemCoinCost: 0
-  itemDollarCost: 10
   itemPrefab: {fileID: 1944292889781474337, guid: 33c72328f56bbfc45bc857c763057158,
     type: 3}
-  size: {x: 0, y: 0}
+  itemType: 1
+  itemDollarCost: 10
+  itemCoinCost: 0
+  levelToUnlock: 0
+  itemExp: 1
+  itemTime: {x: 0, y: 0, z: 10}
+  itemPrize: 21
+  itemAdditionalPrize: 0

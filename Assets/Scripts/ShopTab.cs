@@ -6,7 +6,7 @@ using UnityEngine;
 public class ShopTab
 {
     [SerializeField] Sprite tabIcon;
-    [SerializeField] List<ShopItem> shopItems;
+    [SerializeField] List<Item> shopItems;
 
     GameObject shopItemsGrid;
 
@@ -15,7 +15,7 @@ public class ShopTab
         return tabIcon;
     }
 
-    public List<ShopItem> getShopItems()
+    public List<Item> getShopItems()
     {
         return shopItems;
     }

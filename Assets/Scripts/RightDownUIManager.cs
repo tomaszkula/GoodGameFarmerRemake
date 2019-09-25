@@ -16,20 +16,20 @@ public class RightDownUIManager : MonoBehaviour
 
     public void NormalMode()
     {
-        buildManager.BuildMode = BuildMode.NORMAL_MODE;
+        buildManager.BuildMode = BuildMode.Normal_Mode;
         itemFollowingMouseManager.SetItemFollowingMouse(null);
     }
 
     public void SetUpPlowedMode()
     {
         buildManager.Item = plowedField;
-        buildManager.BuildMode = BuildMode.SET_UP_PLOWED_MODE;
+        buildManager.BuildMode = BuildMode.PutOnGrid_Mode;
         itemFollowingMouseManager.SetItemFollowingMouse(plowedField.GetItemPrefab());
     }
 
     public void DigMode()
     {
-        buildManager.BuildMode = BuildMode.DIG_MODE;
+        buildManager.BuildMode = BuildMode.Dig_Mode;
         itemFollowingMouseManager.SetItemFollowingMouse(null);
     }
 
