@@ -27,7 +27,7 @@ public class ItemFollowingMouseManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             Vector3 toGrid = gridSystem.SnapToGrid(hit.point);
-            Vector2 size = buildManager.Item.GetSize();
+            Vector2Int size = buildManager.Item.GetSize();
 
             Vector3 newPos = gridSystem.SnapToPosition(toGrid, size);
             itemFollowingMouse.gameObject.transform.position = newPos;

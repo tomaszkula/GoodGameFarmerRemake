@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Items/SeedsItem")]
-public class SeedsItem : Item
+[CreateAssetMenu(menuName = "Items/PlantItem")]
+public class PlantItem : Item
 {
-    [Header("Seeds Info")]
+    [Header("Plant Info")]
     [SerializeField] int itemExp;
     [SerializeField] Vector3Int itemTime;
     [SerializeField] int itemPrize;
@@ -11,7 +11,7 @@ public class SeedsItem : Item
 
     void OnEnable()
     {
-        itemType = ItemType.Seeds;
+        itemType = ItemType.Plant;
     }
 
     public int GetItemExp() { return itemExp; }

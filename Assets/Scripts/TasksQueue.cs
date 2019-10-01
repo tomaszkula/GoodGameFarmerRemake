@@ -6,7 +6,8 @@ public class TasksQueue : MonoBehaviour
 {
     TasksQueue tasksQueue;
     Queue<Task> tasks = new Queue<Task>();
-    bool running = false, crRunning = false;
+    Task currentTask;
+    bool running = false;
 
     void Awake()
     {
@@ -22,40 +23,40 @@ public class TasksQueue : MonoBehaviour
 
     IEnumerator Run()
     {
-        while (running)
-        {
-            Task task = Remove();
-            task.DoTask();
-            Debug.Log("XD");
-            yield return new WaitForSeconds(3f);
-        }
-        crRunning = false;
+        running = true;
+        do { 
+            currentTask = Remove();
+
+            StartCoroutine(currentTask.DoTask());
+            while (currentTask.IsDoing()) { yield return null; }
+            currentTask = null;
+        } while (tasks.Count > 0);
+        running = false;
     }
 
     public void Add(Task task)
     {
         tasks.Enqueue(task);
-
-        if(!running)
-        {
-            running = true;
-            if (!crRunning)
-            {
-                crRunning = true;
-                StartCoroutine("Run");
-            }
-        }
+        if (!running) StartCoroutine(Run());
     }
 
     public Task Remove()
     {
         Task task = tasks.Dequeue();
+        return task;
+    }
 
-        if(tasks.Count < 1)
+    public bool IsQueued(GameObject go)
+    {
+        foreach(Task task in tasks)
         {
-            running = false;
+            if (task.GetTaskGameObject() == go) return true;
+        }
+        if (currentTask != null && currentTask.GetTaskGameObject() == go)
+        {
+            return true;
         }
 
-        return task;
+        return false;
     }
 }

@@ -3,20 +3,14 @@
 public enum BuildMode
 {
     //NORMAL_MODE, DIG_MODE, SET_UP_PLOWED_MODE, PLOW_MODE, PLANT_MODE, COLLECT_MODE
-    Normal_Mode, Dig_Mode, Plant_Mode, Collect_Mode, PutOnGrid_Mode
-}
-
-public enum BuildModeFlexibility
-{
-    Flexible, Inflexible
+    Normal_Mode, Dig_Mode, Plant_Mode, Collect_Mode, Plow_Mode, PutOnGrid_Mode
 }
 
 public class BuildManager : MonoBehaviour
 {
     BuildMode buildMode;
-    BuildModeFlexibility buildModeFlexibility;
     ShopItem item;
-    SeedsItem seeds;
+    PlantItem plantItem;
 
     void Start()
     {
@@ -33,20 +27,21 @@ public class BuildManager : MonoBehaviour
         set
         {
             buildMode = value;
-
-            switch(value) {
-                case BuildMode.Normal_Mode:
-                    buildModeFlexibility = BuildModeFlexibility.Flexible;
-                    break;
-            }
         }
     }
 
-    public BuildModeFlexibility BuildModeFlexibility
+    public bool isModeFlexible()
     {
-        get
+        switch (buildMode)
         {
-            return buildModeFlexibility;
+            case BuildMode.Normal_Mode:
+            case BuildMode.Plant_Mode:
+            case BuildMode.Collect_Mode:
+            case BuildMode.Plow_Mode:
+                return true;
+
+            default:
+                return false;
         }
     }
 
@@ -63,16 +58,16 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    public SeedsItem Seeds
+    public PlantItem PlantItem
     {
         get
         {
-            return seeds;
+            return plantItem;
         }
 
         set
         {
-            seeds = value;
+            plantItem = value;
         }
     }
 }

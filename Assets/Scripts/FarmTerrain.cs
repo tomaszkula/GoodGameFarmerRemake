@@ -32,7 +32,7 @@ public class FarmTerrain : MonoBehaviour
     void BuildItemOnGrid(Vector3 point)
     {
         Vector3 pos = gridSystem.SnapToGrid(point);
-        Vector2 size = buildManager.Item.GetSize();
+        Vector2Int size = buildManager.Item.GetSize();
         if (!CanBuild(pos, size)) return;
 
         Vector3 newPos = gridSystem.SnapToPosition(pos, size);

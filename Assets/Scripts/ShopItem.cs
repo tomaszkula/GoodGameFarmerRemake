@@ -20,7 +20,7 @@ public class ShopItem : ScriptableObject
 
     [Header("For Grid")]
     [SerializeField] GameObject itemPrefab;
-    [SerializeField] Vector2 size;
+    [SerializeField] Vector2Int size;
 
     public string GetItemName() { return itemName; }
 
@@ -42,5 +42,5 @@ public class ShopItem : ScriptableObject
 
     public GameObject GetItemPrefab() { return itemPrefab; }
 
-    public Vector2 GetSize() { return size; }
+    public Vector2Int GetSize() { return size; }
 }

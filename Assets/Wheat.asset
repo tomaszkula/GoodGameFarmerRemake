@@ -21,6 +21,6 @@ MonoBehaviour:
   itemCoinCost: 0
   levelToUnlock: 0
   itemExp: 1
-  itemTime: {x: 0, y: 0, z: 10}
+  itemTime: {x: 0, y: 0, z: 1}
   itemPrize: 21
   itemAdditionalPrize: 0

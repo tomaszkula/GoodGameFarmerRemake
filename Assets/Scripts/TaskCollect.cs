@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class TaskCollect : Task
 {
-    ShopItem item;
+    PlantItem plantItem;
     bool destroyOnCollect;
+
+    public TaskCollect(GameObject go, PlantItem plantItem, bool destroyOnCollect) : base(go)
+    {
+        this.plantItem = plantItem;
+        this.destroyOnCollect = destroyOnCollect;
+
+        ChangePlayerPositionTarget(go.transform.parent.gameObject);
+    }
 
     protected override void Job()
     {
         if (destroyOnCollect)
         {
-            Destroy(taskGameObject);
+            PlantController pc = taskGameObject.GetComponent<PlantController>();
+            pc.CollectPlant();
         }
-    }
-
-    public void Init(GameObject go, ShopItem item, bool destroyOnCollect)
-    {
-        taskGameObject = go;
-        this.item = item;
-        this.destroyOnCollect = destroyOnCollect;
+        else
+        {
+            PlantController pc = taskGameObject.GetComponent<PlantController>();
+            pc.ResetGrowth();
+        }
     }
 }

@@ -83,8 +83,8 @@ public class ShopController : MonoBehaviour
             case ItemType.Grid:
                 break;
 
-            case ItemType.Seeds:
-                SeedsUnlocked(shopItemHolderScript, (SeedsItem)shopItem);
+            case ItemType.Plant:
+                SeedsUnlocked(shopItemHolderScript, (PlantItem)shopItem);
                 break;
         }
 
@@ -92,12 +92,12 @@ public class ShopController : MonoBehaviour
         shopItemHolderScript.SetUnlocked();
     }
 
-    void SeedsUnlocked(ShopItemHolder shopItemHolderScript, SeedsItem seedsItem)
+    void SeedsUnlocked(ShopItemHolder shopItemHolderScript, PlantItem plantItem)
     {
-        shopItemHolderScript.SetItemExp(seedsItem.GetItemExp());
-        shopItemHolderScript.SetItemTime(seedsItem.GetItemTime());
-        shopItemHolderScript.SetItemPrize(seedsItem.GetItemPrize());
-        shopItemHolderScript.SetItemAdditionalPrize(seedsItem.GetItemAdditionalPrize());
+        shopItemHolderScript.SetItemExp(plantItem.GetItemExp());
+        shopItemHolderScript.SetItemTime(plantItem.GetItemTime());
+        shopItemHolderScript.SetItemPrize(plantItem.GetItemPrize());
+        shopItemHolderScript.SetItemAdditionalPrize(plantItem.GetItemAdditionalPrize());
     }
 
     void OpenTab(ShopTab tab = null, int idPage = 1)
@@ -128,15 +128,14 @@ public class ShopController : MonoBehaviour
             case ItemType.Grid:
                 break;
 
-            case ItemType.Seeds:
+            case ItemType.Plant:
+                buildManager.PlantItem = (PlantItem)item;
+                buildManager.BuildMode = BuildMode.Plant_Mode;
+                itemFollowingMouseManager.SetItemFollowingMouse(null);
                 break;
         }
 
         ExitShop();
-
-        /*buildManager.Item = item;
-        buildManager.BuildMode = BuildMode.PLANT_MODE;
-        itemFollowingMouseManager.SetItemFollowingMouse(null);*/
     }
 
     public void SlideGridView(int side)

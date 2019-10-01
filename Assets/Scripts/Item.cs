@@ -3,7 +3,7 @@
 public enum ItemType
 {
     Grid,
-    Seeds
+    Plant
 }
 
 public abstract class Item : ScriptableObject
