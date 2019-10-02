@@ -15,11 +15,6 @@ public class TaskPlant : Task
 
     protected override void Job()
     {
-        GameObject plant = GameObject.Instantiate(plantItem.GetItemPrefab(), taskGameObject.transform.position, Quaternion.identity);
-        plant.transform.parent = taskGameObject.transform;
-        PlantController pc = plant.AddComponent<PlantController>();
-        pc.Init(plantItem, true);
-
-        pfc.SetPlant(plant);
+        pfc.Plant(plantItem);
     }
 }
