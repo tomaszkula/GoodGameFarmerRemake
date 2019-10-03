@@ -1,59 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlantController : MonoBehaviour, ICollectable, ITaskable
+public class PlantController : MonoBehaviour
 {
-    public System.DateTime BeginTime { get; set; }
-    public System.DateTime EndTime { get; set; }
+    public PlantItem PlantItem { get; set; }
+    public System.DateTime BeginGrowthTime { get; set; }
+    public System.DateTime EndGrowthTime { get; set; }
     public bool IsCollectable { get; set; }
-    public bool IsTaskQueued { get { return tasksQueue.IsQueued(gameObject); } }
-
-    TasksQueue tasksQueue;
-
-    void Start()
-    {
-        tasksQueue = FindObjectOfType<TasksQueue>();
-    }
-
-    public void AssignTask()
-    {
-        //TaskCollect task = new TaskCollect(gameObject, plantItem, destroyOnCollect);
-        //tasksQueue.Add(task);
-    }
-
-    public void Collect()
-    {
-        Destroy(gameObject);
-        //transform.parent.GetComponent<PlowedFieldController>().SetUnplowed();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-}
-
-/*public class PlantController : MonoBehaviour, ICollectable
-{
-    public bool IsCollectable { get; set; }
-    public System.DateTime BeginTime { get; set; }
-    public System.DateTime EndTime { get; set; }
 
     BuildManager buildManager;
     TasksQueue tasksQueue;
 
-    PlantItem plantItem;
-    System.DateTime beginTime, endTime;
-    bool destroyOnCollect;
-
-    public void Init(PlantItem plantItem, bool destroyOnCollect = false)
+    public void Init(PlantItem plantItem)
     {
-        this.plantItem = plantItem;
-        this.destroyOnCollect = destroyOnCollect;
-        ResetGrowth();
+        PlantItem = plantItem;
+        ResetGrowthTime(PlantItem.GetItemTime().x, PlantItem.GetItemTime().y, PlantItem.GetItemTime().z);
     }
 
     void Start()
@@ -64,7 +25,7 @@ public class PlantController : MonoBehaviour, ICollectable, ITaskable
 
     void Update()
     {
-        if (System.DateTime.Now < endTime || IsCollectable) return;
+        if (IsCollectable || EndGrowthTime == null || System.DateTime.Now < EndGrowthTime) return;
 
         IsCollectable = true;
         Debug.Log("collectable");
@@ -80,7 +41,7 @@ public class PlantController : MonoBehaviour, ICollectable, ITaskable
         }
         else
         {
-
+            buildManager.BuildMode = BuildMode.Fertilize_Mode;
         }
     }
 
@@ -88,38 +49,42 @@ public class PlantController : MonoBehaviour, ICollectable, ITaskable
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        if (buildManager.BuildMode == BuildMode.Dig_Mode) DigMode();
-        else if (buildManager.BuildMode == BuildMode.Collect_Mode) CollectMode();
+        if (buildManager.BuildMode == BuildMode.Dig_Mode) Dig();
+        else if (buildManager.BuildMode == BuildMode.Collect_Mode) AssignTask(TaskType.CollectTask);
     }
 
-    void DigMode()
+    void Dig()
     {
-        Destroy(gameObject.transform.parent.gameObject);
+        Destroy(transform.parent.gameObject);
     }
 
-    void CollectMode()
+    public void AssignTask(TaskType taskType)
     {
-        if (!collectable) return;
+        if (tasksQueue.IsQueued(gameObject)) return;
 
-        TaskCollect task = new TaskCollect(gameObject, plantItem, destroyOnCollect);
+        Task task;
+        switch (taskType)
+        {
+            case TaskType.CollectTask:
+                if (!IsCollectable) return;
+                task = new TaskCollect(gameObject, PlantItem);
+                break;
+
+            default:
+                return;
+        }
         tasksQueue.Add(task);
-    }
-
-    public void CollectPlant()
-    {
-        Destroy(gameObject);
-        transform.parent.GetComponent<PlowedFieldController>().SetUnplowed();
-    }
-
-    public void ResetGrowth()
-    {
-        beginTime = System.DateTime.Now;
-        endTime = beginTime.AddDays(plantItem.GetItemTime().x).AddHours(plantItem.GetItemTime().y).AddMinutes(plantItem.GetItemTime().z);
     }
 
     public void Collect()
     {
-        throw new System.NotImplementedException();
+        transform.parent.GetComponent<PlowedFieldController>().UnPlow();
+        Destroy(gameObject);
+    }
+
+    void ResetGrowthTime(int days, int hours, int minutes)
+    {
+        BeginGrowthTime = System.DateTime.Now;
+        EndGrowthTime = BeginGrowthTime.AddDays(days).AddHours(hours).AddSeconds(minutes*5);
     }
 }
-*/

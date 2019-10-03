@@ -1,31 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TaskCollect : Task
 {
     PlantItem plantItem;
-    bool destroyOnCollect;
 
-    public TaskCollect(GameObject go, PlantItem plantItem, bool destroyOnCollect) : base(go)
+    PlantController pc;
+
+    public TaskCollect(GameObject go, PlantItem plantItem) : base(go)
     {
         this.plantItem = plantItem;
-        this.destroyOnCollect = destroyOnCollect;
+        pc = taskGameObject.GetComponent<PlantController>();
 
         ChangePlayerPositionTarget(go.transform.parent.gameObject);
     }
 
     protected override void Job()
     {
-        if (destroyOnCollect)
-        {
-            PlantController pc = taskGameObject.GetComponent<PlantController>();
-            //pc.CollectPlant();
-        }
-        else
-        {
-            PlantController pc = taskGameObject.GetComponent<PlantController>();
-            //pc.ResetGrowth();
-        }
+        pc.Collect();
     }
 }

@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+public enum TaskType
+{
+    PlantTask, CollectTask, PlowTask
+}
+
 public abstract class Task
 {
     protected GameObject taskGameObject;

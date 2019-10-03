@@ -3,7 +3,7 @@
 public enum BuildMode
 {
     //NORMAL_MODE, DIG_MODE, SET_UP_PLOWED_MODE, PLOW_MODE, PLANT_MODE, COLLECT_MODE
-    Normal_Mode, Dig_Mode, Plant_Mode, Collect_Mode, Plow_Mode, PutOnGrid_Mode
+    Normal_Mode, Dig_Mode, Plant_Mode, Fertilize_Mode, Collect_Mode, Plow_Mode, PutOnGrid_Mode
 }
 
 public class BuildManager : MonoBehaviour
@@ -36,6 +36,7 @@ public class BuildManager : MonoBehaviour
         {
             case BuildMode.Normal_Mode:
             case BuildMode.Plant_Mode:
+            case BuildMode.Fertilize_Mode:
             case BuildMode.Collect_Mode:
             case BuildMode.Plow_Mode:
                 return true;

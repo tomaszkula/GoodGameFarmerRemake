@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlowedFieldController : MonoBehaviour, IDiggable, IPlantable, IPlowable, ITaskable
+public class PlowedFieldController : MonoBehaviour
 {
     [SerializeField] GameObject plowedFieldPaths;
     [SerializeField] Material plowedMaterial;
     [SerializeField] Material unplowedMaterial;
 
     public GameObject PlantGO { get; set; }
-    public bool IsPlowable { get; set; }
-    public bool IsTaskQueued { get { return tasksQueue.IsQueued(gameObject); } }
+    public bool IsPlowed { get; set; }
 
     BuildManager buildManager;
     TasksQueue tasksQueue;
@@ -24,73 +23,13 @@ public class PlowedFieldController : MonoBehaviour, IDiggable, IPlantable, IPlow
         Plow();
     }
 
-    public void Dig()
-    {
-        Destroy(gameObject);
-    }
-
-    public void Plant(PlantItem plantItem)
-    {
-        if (PlantGO) return;
-
-        PlantGO = Instantiate(plantItem.GetItemPrefab(), transform.position, Quaternion.identity);
-        PlantGO.transform.parent = transform;
-
-
-        /*PlantController pc = plant.AddComponent<PlantController>();
-        pc.Init(plantItem, true);*/
-    }
-
-    public void Plow()
-    {
-        if (!IsPlowable) return;
-
-        IsPlowable = false;
-        rend.material = plowedMaterial;
-    }
-
-    public void UnPlow()
-    {
-        if (IsPlowable) return;
-
-        IsPlowable = true;
-        rend.material = unplowedMaterial;
-    }
-
-    public void AssignTask()
-    {
-        PlantItem plantItem = buildManager.PlantItem;
-        TaskPlant task = new TaskPlant(gameObject, plantItem);
-        tasksQueue.Add(task);
-    }
-
-    /*[SerializeField] Material plowedMaterial;
-    [SerializeField] Material unplowedMaterial;
-    [SerializeField] GameObject plowedFieldPaths;
-
-    BuildManager buildManager;
-    TasksQueue tasksQueue;
-    Renderer rend;
-
-    bool isPlowed;
-    GameObject plant;
-
-    void Start()
-    {
-        buildManager = FindObjectOfType<BuildManager>();
-        tasksQueue = FindObjectOfType<TasksQueue>();
-        rend = plowedFieldPaths.GetComponent<Renderer>();
-
-        SetPlowed();
-    }
-
     void OnMouseEnter()
     {
         if (EventSystem.current.IsPointerOverGameObject() || !buildManager.isModeFlexible()) return;
 
-        if (isPlowed)
+        if (IsPlowed)
         {
-            if (plant) return;
+            if (PlantGO) return;
 
             buildManager.BuildMode = BuildMode.Plant_Mode;
         }
@@ -105,47 +44,58 @@ public class PlowedFieldController : MonoBehaviour, IDiggable, IPlantable, IPlow
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
         if (buildManager.BuildMode == BuildMode.Dig_Mode) Dig();
-        else if (buildManager.BuildMode == BuildMode.Plant_Mode) Plant();
-        else if (buildManager.BuildMode == BuildMode.Plow_Mode) Plow();
+        else if (buildManager.BuildMode == BuildMode.Plant_Mode) AssignTask(TaskType.PlantTask);
+        else if (buildManager.BuildMode == BuildMode.Plow_Mode) AssignTask(TaskType.PlowTask);
     }
 
-    void Dig()
+    public void Dig()
     {
         Destroy(gameObject);
     }
 
-    void Plant()
+    public void AssignTask(TaskType taskType)
     {
-        if (plant || !isPlowed || tasksQueue.IsQueued(gameObject)) return;
+        if (tasksQueue.IsQueued(gameObject)) return;
 
-        PlantItem plantItem = buildManager.PlantItem;
-        TaskPlant task = new TaskPlant(gameObject, plantItem);
+        Task task;
+        switch (taskType)
+        {
+            case TaskType.PlantTask:
+                if (PlantGO || !IsPlowed) return;
+                PlantItem plantItem = buildManager.PlantItem;
+                task = new TaskPlant(gameObject, plantItem);
+                break;
+
+            case TaskType.PlowTask:
+                if (PlantGO || IsPlowed) return;
+                task = new TaskPlow(gameObject);
+                break;
+
+            default:
+                return;
+        }
         tasksQueue.Add(task);
     }
 
-    void Plow()
+    public void Plant(PlantItem plantItem)
     {
-        if (plant || isPlowed || tasksQueue.IsQueued(gameObject)) return;
+        PlantGO = Instantiate(plantItem.GetItemPrefab(), transform.position, Quaternion.identity);
+        PlantGO.transform.parent = transform;
 
-
+        PlantController pc = PlantGO.GetComponent<PlantController>();
+        if (!pc) pc = PlantGO.AddComponent<PlantController>();
+        pc.Init(plantItem);
     }
 
-    public void SetPlant(GameObject plant)
+    public void Plow()
     {
-        this.plant = plant;
-    }
-
-    public void SetPlowed()
-    {
-        isPlowed = true;
+        IsPlowed = true;
         rend.material = plowedMaterial;
     }
 
-    public void SetUnplowed()
+    public void UnPlow()
     {
-        if (!isPlowed) return;
-
-        isPlowed = false;
+        IsPlowed = false;
         rend.material = unplowedMaterial;
-    }*/
+    }
 }
