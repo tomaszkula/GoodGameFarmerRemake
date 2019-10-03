@@ -20,12 +20,12 @@ public class TaskCollect : Task
         if (destroyOnCollect)
         {
             PlantController pc = taskGameObject.GetComponent<PlantController>();
-            pc.CollectPlant();
+            //pc.CollectPlant();
         }
         else
         {
             PlantController pc = taskGameObject.GetComponent<PlantController>();
-            pc.ResetGrowth();
+            //pc.ResetGrowth();
         }
     }
 }

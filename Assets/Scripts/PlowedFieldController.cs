@@ -1,9 +1,70 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlowedFieldController : MonoBehaviour
+public class PlowedFieldController : MonoBehaviour, IDiggable, IPlantable, IPlowable, ITaskable
 {
+    [SerializeField] GameObject plowedFieldPaths;
     [SerializeField] Material plowedMaterial;
+    [SerializeField] Material unplowedMaterial;
+
+    public GameObject PlantGO { get; set; }
+    public bool IsPlowable { get; set; }
+    public bool IsTaskQueued { get { return tasksQueue.IsQueued(gameObject); } }
+
+    BuildManager buildManager;
+    TasksQueue tasksQueue;
+    Renderer rend;
+
+    void Start()
+    {
+        buildManager = FindObjectOfType<BuildManager>();
+        tasksQueue = FindObjectOfType<TasksQueue>();
+        rend = plowedFieldPaths.GetComponent<Renderer>();
+
+        Plow();
+    }
+
+    public void Dig()
+    {
+        Destroy(gameObject);
+    }
+
+    public void Plant(PlantItem plantItem)
+    {
+        if (PlantGO) return;
+
+        PlantGO = Instantiate(plantItem.GetItemPrefab(), transform.position, Quaternion.identity);
+        PlantGO.transform.parent = transform;
+
+
+        /*PlantController pc = plant.AddComponent<PlantController>();
+        pc.Init(plantItem, true);*/
+    }
+
+    public void Plow()
+    {
+        if (!IsPlowable) return;
+
+        IsPlowable = false;
+        rend.material = plowedMaterial;
+    }
+
+    public void UnPlow()
+    {
+        if (IsPlowable) return;
+
+        IsPlowable = true;
+        rend.material = unplowedMaterial;
+    }
+
+    public void AssignTask()
+    {
+        PlantItem plantItem = buildManager.PlantItem;
+        TaskPlant task = new TaskPlant(gameObject, plantItem);
+        tasksQueue.Add(task);
+    }
+
+    /*[SerializeField] Material plowedMaterial;
     [SerializeField] Material unplowedMaterial;
     [SerializeField] GameObject plowedFieldPaths;
 
@@ -86,5 +147,5 @@ public class PlowedFieldController : MonoBehaviour
 
         isPlowed = false;
         rend.material = unplowedMaterial;
-    }
+    }*/
 }
