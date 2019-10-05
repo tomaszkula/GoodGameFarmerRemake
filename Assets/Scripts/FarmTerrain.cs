@@ -31,23 +31,30 @@ public class FarmTerrain : MonoBehaviour
 
     void BuildItemOnGrid(Vector3 point)
     {
-        Vector3 pos = gridSystem.SnapToGrid(point);
         Vector2Int size = buildManager.Item.GetSize();
-        if (!CanBuild(pos, size)) return;
+        if (!CanBuild(point, size)) return;
 
-        Vector3 newPos = gridSystem.SnapToPosition(pos, size);
-        GameObject item = (GameObject)Instantiate(buildManager.Item.GetItemPrefab(), newPos, Quaternion.identity);
+        GameObject prefab = buildManager.Item.GetItemPrefab();
+        Vector3 newPos = gridSystem.SnapToGrid(point, prefab, size);
+
+        GameObject item = Instantiate(prefab, newPos, prefab.transform.rotation);
         item.transform.parent = gridSystem.transform;
-        FillGrid(pos, size, item);
+        FillGrid(point, size, item);
     }
 
-    bool CanBuild(Vector3 pos, Vector2 size)
+    bool CanBuild(Vector3 pos, Vector2Int size)
     {
-        for (int x = (int)(pos.x); x < pos.x + (int)(size.x); x++)
+        int x = Mathf.FloorToInt(pos.x + 0.5f);
+        int z = Mathf.FloorToInt(pos.z + 0.5f);
+
+        for (int i = x; i < x + size.x; i++)
         {
-            for (int z = (int)(pos.z); z > pos.z - (int)(size.y); z--)
+            for (int j = z; j > z - size.y; j--)
             {
-                if (!gridSystem.IsNodeFree(x, z)) return false;
+                if (!gridSystem.IsNodeFree(i, j))
+                {
+                    return false;
+                }
             }
         }
         return true;
@@ -55,11 +62,14 @@ public class FarmTerrain : MonoBehaviour
 
     void FillGrid(Vector3 pos, Vector2 size, GameObject go)
     {
-        for (int x = (int)(pos.x); x < pos.x + (int)(size.x); x++)
+        int x = Mathf.FloorToInt(pos.x + 0.5f);
+        int z = Mathf.FloorToInt(pos.z + 0.5f);
+
+        for (int i = x; i < x + size.x; i++)
         {
-            for (int z = (int)(pos.z); z > pos.z - (int)(size.y); z--)
+            for (int j = z; j > z - size.y; j--)
             {
-                gridSystem.FillGrid(x, z, go);
+                gridSystem.FillGrid(i, j, go);
             }
         }
     }

@@ -2,7 +2,6 @@
 
 public enum BuildMode
 {
-    //NORMAL_MODE, DIG_MODE, SET_UP_PLOWED_MODE, PLOW_MODE, PLANT_MODE, COLLECT_MODE
     Normal_Mode, Dig_Mode, Plant_Mode, Fertilize_Mode, Collect_Mode, Plow_Mode, PutOnGrid_Mode
 }
 

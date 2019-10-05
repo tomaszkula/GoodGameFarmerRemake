@@ -53,6 +53,14 @@ public class PlantController : MonoBehaviour
         else if (buildManager.BuildMode == BuildMode.Collect_Mode) AssignTask(TaskType.CollectTask);
     }
 
+    void OnDestroy()
+    {
+        Task task;
+        if (!tasksQueue || !(task = tasksQueue.IsQueued(gameObject))) return;
+
+        tasksQueue.RemoveTask(task);
+    }
+
     void Dig()
     {
         Destroy(transform.parent.gameObject);
@@ -73,7 +81,7 @@ public class PlantController : MonoBehaviour
             default:
                 return;
         }
-        tasksQueue.Add(task);
+        tasksQueue.AddTask(task);
     }
 
     public void Collect()

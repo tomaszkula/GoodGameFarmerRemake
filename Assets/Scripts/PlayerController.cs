@@ -6,39 +6,30 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 8f;
 
-    bool moving = false;
+    public bool IsMoving { get; set; }
 
-    public void Move(Vector3 pos)
+    public IEnumerator MovePlayer(Vector3 pos)
     {
-        moving = true;
-
         Vector3 newPos = new Vector3(pos.x, transform.position.y, pos.z);
-        StartCoroutine(MovePlayer(newPos));
-    }
-
-    IEnumerator MovePlayer(Vector3 end)
-    {
-        Vector3 xEnd = end;
+        Vector3 xEnd = newPos;
         xEnd.z = transform.position.z;
 
         transform.LookAt(xEnd);
         while(Mathf.Abs(xEnd.x - transform.position.x) > Mathf.Epsilon)
         {
+            if (!IsMoving) yield break;
+
             transform.position = Vector3.MoveTowards(transform.position, xEnd, movementSpeed * Time.deltaTime);
             yield return null;
         }
 
-        transform.LookAt(end);
-        while (Mathf.Abs(end.z - transform.position.z) > Mathf.Epsilon)
+        transform.LookAt(newPos);
+        while (Mathf.Abs(newPos.z - transform.position.z) > Mathf.Epsilon)
         {
-            transform.position = Vector3.MoveTowards(transform.position, end, movementSpeed * Time.deltaTime);
+            if (!IsMoving) yield break;
+
+            transform.position = Vector3.MoveTowards(transform.position, newPos, movementSpeed * Time.deltaTime);
             yield return null;
         }
-        moving = false;
-    }
-
-    public bool IsMoving()
-    {
-        return moving;
     }
 }

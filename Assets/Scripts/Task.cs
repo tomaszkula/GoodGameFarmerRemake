@@ -14,7 +14,7 @@ public abstract class Task
     GridSystem gridSystem;
     PlayerController playerController;
 
-    bool doing;
+    public bool IsDoing { get; set; }
 
     public Task(GameObject go)
     {
@@ -24,27 +24,15 @@ public abstract class Task
         playerPositionTarget = taskGameObject = go;
     }
 
-    void MovePlayer()
-    {
-        Vector3 posToMove = gridSystem.GetClosestObjectCorner(playerPositionTarget, playerController.gameObject.transform.position);
-        playerController.Move(posToMove);
-    }
-
     public IEnumerator DoTask()
     {
-        doing = true;
+        if (!IsDoing) yield break;
+        playerController.IsMoving = true;
+        Vector3 posToMove = gridSystem.GetClosestObjectCorner(playerPositionTarget, playerController.gameObject.transform.position);
+        yield return playerController.MovePlayer(posToMove);
 
-        MovePlayer();
-        while(playerController.IsMoving()) { yield return null; }
-
+        if (!IsDoing) yield break;
         Job();
-
-        doing = false;
-    }
-
-    public bool IsDoing()
-    {
-        return doing;
     }
 
     public GameObject GetTaskGameObject()
@@ -55,6 +43,18 @@ public abstract class Task
     public void ChangePlayerPositionTarget(GameObject target)
     {
         playerPositionTarget = target;
+    }
+
+    public void StopDoingTask()
+    {
+        IsDoing = false;
+        playerController.IsMoving = false;
+    }
+
+    public static implicit operator bool(Task task)
+    {
+        if (task != null) return true;
+        return false;
     }
 
     protected abstract void Job();

@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 41844636}
   - component: {fileID: 41844635}
   - component: {fileID: 41844634}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1848,6 +1848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f11c1730ed28541b52e54b53f78b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distance: 10
 --- !u!114 &799879978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2173,7 +2174,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 17
+  orthographic size: 16
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2872,7 +2873,7 @@ GameObject:
   - component: {fileID: 1572577631}
   - component: {fileID: 1572577630}
   - component: {fileID: 1572577635}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Farm Terrain
   m_TagString: Farm Terrain
   m_Icon: {fileID: 0}

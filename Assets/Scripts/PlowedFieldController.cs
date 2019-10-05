@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 
 public class PlowedFieldController : MonoBehaviour
 {
-    [SerializeField] GameObject plowedFieldPaths;
     [SerializeField] Material plowedMaterial;
     [SerializeField] Material unplowedMaterial;
 
@@ -18,7 +17,7 @@ public class PlowedFieldController : MonoBehaviour
     {
         buildManager = FindObjectOfType<BuildManager>();
         tasksQueue = FindObjectOfType<TasksQueue>();
-        rend = plowedFieldPaths.GetComponent<Renderer>();
+        rend = GetComponent<Renderer>();
 
         Plow();
     }
@@ -29,7 +28,7 @@ public class PlowedFieldController : MonoBehaviour
 
         if (IsPlowed)
         {
-            if (PlantGO) return;
+            if (PlantGO || !buildManager.PlantItem) return;
 
             buildManager.BuildMode = BuildMode.Plant_Mode;
         }
@@ -46,6 +45,14 @@ public class PlowedFieldController : MonoBehaviour
         if (buildManager.BuildMode == BuildMode.Dig_Mode) Dig();
         else if (buildManager.BuildMode == BuildMode.Plant_Mode) AssignTask(TaskType.PlantTask);
         else if (buildManager.BuildMode == BuildMode.Plow_Mode) AssignTask(TaskType.PlowTask);
+    }
+
+    void OnDestroy()
+    {
+        Task task;
+        if (!tasksQueue || !(task = tasksQueue.IsQueued(gameObject))) return;
+
+        tasksQueue.RemoveTask(task);
     }
 
     public void Dig()
@@ -74,12 +81,18 @@ public class PlowedFieldController : MonoBehaviour
             default:
                 return;
         }
-        tasksQueue.Add(task);
+        tasksQueue.AddTask(task);
     }
 
     public void Plant(PlantItem plantItem)
     {
-        PlantGO = Instantiate(plantItem.GetItemPrefab(), transform.position, Quaternion.identity);
+        GameObject prefab = plantItem.GetItemPrefab();
+        Renderer prefabRend = prefab.GetComponent<Renderer>();
+        Vector3 pos = transform.position;
+        pos.y = rend.bounds.max.y;
+        pos.y += prefabRend.bounds.max.y - prefabRend.bounds.center.y; // position if pivot is object center but it's not propably
+        pos.y -= prefabRend.bounds.center.y - transform.position.y; // correction for pivot point;
+        PlantGO = Instantiate(prefab, pos, prefab.transform.rotation);
         PlantGO.transform.parent = transform;
 
         PlantController pc = PlantGO.GetComponent<PlantController>();
@@ -90,12 +103,12 @@ public class PlowedFieldController : MonoBehaviour
     public void Plow()
     {
         IsPlowed = true;
-        rend.material = plowedMaterial;
+        rend.materials[1].CopyPropertiesFromMaterial(plowedMaterial);
     }
 
     public void UnPlow()
     {
         IsPlowed = false;
-        rend.material = unplowedMaterial;
+        rend.materials[1].CopyPropertiesFromMaterial(unplowedMaterial);
     }
 }

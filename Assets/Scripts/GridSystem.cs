@@ -12,21 +12,16 @@ public class GridSystem : MonoBehaviour
         grid = new GameObject[gridSize, gridSize];
     }
 
-    public Vector3 SnapToGrid(Vector3 pos)
+    public Vector3 SnapToGrid(Vector3 pos, GameObject go, Vector2Int size)
     {
         Vector3 newPos = new Vector3();
-        newPos.x = Mathf.Floor(pos.x + 0.5f);
+        newPos.x = Mathf.Floor(pos.x + 0.5f) + (size.x - 1) / 2f;
         newPos.y = pos.y;
-        newPos.z = Mathf.Floor(pos.z + 0.5f);
-        return newPos;
-    }
+        newPos.z = Mathf.Floor(pos.z + 0.5f) - (size.y - 1) / 2f;
 
-    public Vector3 SnapToPosition(Vector3 pos, Vector2Int size)
-    {
-        Vector3 newPos = new Vector3();
-        newPos.x = pos.x + (size.x - 1) / 2f;
-        newPos.y = /*pos.y +*/ (GetComponent<Renderer>().bounds.size.y);
-        newPos.z = pos.z - (size.y - 1) / 2f;
+        Renderer rend = go.GetComponent<Renderer>();
+        newPos.y += rend.bounds.max.y - rend.bounds.center.y; // position if pivot is object center but it's not propably
+        newPos.y -= rend.bounds.center.y - go.transform.position.y; // correction for pivot point;
         return newPos;
     }
 

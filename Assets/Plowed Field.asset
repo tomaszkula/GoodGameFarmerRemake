@@ -21,6 +21,6 @@ MonoBehaviour:
   itemAdditionalPrize: 0
   itemCoinCost: 0
   itemDollarCost: 10
-  itemPrefab: {fileID: 4039510860722995012, guid: da5c8ad652ef3f644a82a1baa5767376,
+  itemPrefab: {fileID: 1203856096526040349, guid: 0123d9f8794fb844e8853be2203bf616,
     type: 3}
   size: {x: 4, y: 4}
